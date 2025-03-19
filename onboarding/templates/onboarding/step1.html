@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
         body {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{% static "images/theme-selection-bg.jpg" %}'); /* Replace with your image path */
+            background-image: url('https://images.pexels.com/photos/3742699/pexels-photo-3742699.jpeg?auto=compress&cs=tinysrgb&w=600');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -30,7 +30,7 @@
         }
 
         .col-md-9 {
-            background-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             padding: 40px;
             border-radius: 10px;
@@ -41,12 +41,14 @@
         }
 
         .theme-card {
-            background-color: rgba(255, 255, 255, 0.8);
-            color: black;
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            color: white;
         }
 
         .card-title {
-            color: black;
+            color: white;
         }
 
         .card-body {
@@ -55,18 +57,18 @@
 
         h2 {
             color: white;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
         }
 
         .btn-primary {
-            background-color: #00bcd4;
-            border-color: #00bcd4;
-            transition: background-color 0.3s ease;
+            background: linear-gradient(135deg, #2c2c2c, #545454);
+            border: none;
+            transition: background 0.3s ease, transform 0.3s ease;
         }
 
         .btn-primary:hover {
-            background-color: #008ba7;
-            border-color: #008ba7;
+            background: linear-gradient(135deg, #545454, #2c2c2c);
+            transform: translateY(-3px);
         }
     </style>
 </head>
@@ -91,7 +93,7 @@
                             <img src="{% static 'images/theme2.jpg' %}" class="card-img-top" alt="Theme 2">
                             <div class="card-body">
                                 <h5 class="card-title">Theme 2</h5>
-                                <input type="radio" name="theme" value="ACCESSIORIES" class="form-check-input" required>
+                                <input type="radio" name="theme" value="ACCESSORIES" class="form-check-input" required>
                             </div>
                         </div>
                     </div>

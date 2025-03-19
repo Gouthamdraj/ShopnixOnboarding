@@ -9,39 +9,17 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <style>
         body {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{% static "images/product-upload-bg.jpg" %}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0;
-            color: white;
-            text-align: center;
-        }
-
-        .container-fluid {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        .col-md-9 {
-            background-color: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 40px;
-            border-radius: 10px;
-            max-width: 1200px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: left;
-        }
-
-        /* All other styles remain the same */
-
+    background-image: url('https://images.pexels.com/photos/3742699/pexels-photo-3742699.jpeg?auto=compress&cs=tinysrgb&w=600');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+        h2, h4, h5 { color: black; }
+        .btn-primary { background-color: #6c757d !important; border-color: #6c757d !important; }
+        .btn-secondary { background-color: #adb5bd !important; border-color: #adb5bd !important; }
+        .btn-success { background-color: #868e96 !important; border-color: #868e96 !important; }
+        .btn-success:disabled { background-color: #b0b4b8 !important; border-color: #b0b4b8 !important; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -51,42 +29,47 @@
 
             <div class="row">
                 <div class="col-md-6">
-                    <form method="post" enctype="multipart/form-data">
+                    <form id="productForm" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
 
                         <div class="mb-3">
                             <label for="sku" class="form-label">SKU (Unique Book Code)</label>
-                            <input type="text" class="form-control" id="sku" name="sku" value="{{ request.POST.sku|default_if_none:'' }}" required readonly>
+                            <input type="text" class="form-control required-field" id="sku" name="sku" required readonly>
                             <button type="button" class="btn btn-secondary mt-2" onclick="generateSKU()">Generate SKU</button>
                         </div>
 
                         <div class="mb-3">
                             <label for="productImage" class="form-label">Upload Product Image</label>
-                            <input type="file" class="form-control" id="productImage" name="productImage" accept="image/*">
+                            <input type="file" class="form-control required-field" id="productImage" name="productImage" accept="image/*" required>
                         </div>
+
                         <div class="mb-3">
                             <label for="price" class="form-label">Price</label>
-                            <input type="number" class="form-control" id="price" name="price" value="{{ request.POST.price|default_if_none:'' }}" required>
+                            <input type="number" class="form-control required-field" id="price" name="price" required>
                         </div>
+
                         <div class="mb-3">
                             <label for="discount" class="form-label">Discount (%)</label>
-                            <input type="number" class="form-control" id="discount" name="discount" value="{{ request.POST.discount|default_if_none:'' }}" required>
+                            <input type="number" class="form-control required-field" id="discount" name="discount" required>
                         </div>
+
                         <div class="mb-3">
                             <label for="gst" class="form-label">GST (%)</label>
-                            <input type="number" class="form-control" id="gst" name="gst" value="{{ request.POST.gst|default_if_none:'' }}" required>
+                            <input type="number" class="form-control required-field" id="gst" name="gst" required>
                         </div>
+
                         <div class="mb-3">
                             <label for="deliveryCharge" class="form-label">Delivery Charge</label>
-                            <input type="number" class="form-control" id="deliveryCharge" name="deliveryCharge" value="{{ request.POST.deliveryCharge|default_if_none:'' }}" required>
+                            <input type="number" class="form-control required-field" id="deliveryCharge" name="deliveryCharge" required>
                         </div>
+
                         <div class="mb-3">
                             <label for="stock" class="form-label">Stock</label>
-                            <input type="number" class="form-control" id="stock" name="stock" value="{{ request.POST.stock|default_if_none:'' }}" required>
+                            <input type="number" class="form-control required-field" id="stock" name="stock" required>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Upload and Calculate</button>
-                        <a href="{% url 'setup_store' %}" class="btn btn-success">Next</a>
+                        <a href="{% url 'setup_store' %}" id="nextButton" class="btn btn-success" disabled>Next</a>
                     </form>
                 </div>
 
@@ -106,15 +89,16 @@
     </div>
 
     <script>
-        // Function to generate a random SKU code
+        // Generate SKU
         function generateSKU() {
             let timestamp = new Date().getTime().toString().slice(-6);
             let randomPart = Math.floor(1000 + Math.random() * 9000);
             let sku = "BOOK-" + timestamp + "-" + randomPart;
             document.getElementById('sku').value = sku;
+            validateForm();
         }
 
-        // Display the uploaded image dynamically
+        // Show uploaded image preview
         document.getElementById('productImage').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
@@ -125,9 +109,10 @@
                 };
                 reader.readAsDataURL(file);
             }
+            validateForm();
         });
 
-        // Calculate Net Amount dynamically
+        // Calculate Net Amount
         document.querySelector('form').addEventListener('input', function() {
             const price = parseFloat(document.getElementById('price').value) || 0;
             const discount = parseFloat(document.getElementById('discount').value) || 0;
@@ -140,15 +125,23 @@
             const netAmount = priceAfterDiscount + gstAmount + deliveryCharge;
 
             document.getElementById('netAmount').textContent = netAmount.toFixed(2);
+            validateForm();
         });
 
-        // Preserve net amount after form submission
-        document.addEventListener('DOMContentLoaded', function() {
-            const netAmount = parseFloat("{{ net_amount|default:'0' }}");
-            if (!isNaN(netAmount)) {
-                document.getElementById('netAmount').textContent = netAmount.toFixed(2);
-            }
-        });
+        // Enable "Next" button only if all required fields are filled
+        function validateForm() {
+            let allFilled = true;
+            document.querySelectorAll('.required-field').forEach(field => {
+                if (!field.value.trim()) {
+                    allFilled = false;
+                }
+            });
+
+            document.getElementById('nextButton').disabled = !allFilled;
+        }
+
+        // Validate form on page load (for existing data)
+        document.addEventListener('DOMContentLoaded', validateForm);
     </script>
 </body>
 </html>

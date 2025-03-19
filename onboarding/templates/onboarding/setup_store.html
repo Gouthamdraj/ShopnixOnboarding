@@ -11,12 +11,11 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            /* Background image styles added here */
-            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{% static "images/store-setup-bg.jpg" %}'); /* Replace with your image path */
+            background-image: url('https://images.pexels.com/photos/3742699/pexels-photo-3742699.jpeg?auto=compress&cs=tinysrgb&w=600');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            color: white; /* Added text color for better visibility */
+            color: white;
         }
 
         .container {
@@ -25,8 +24,8 @@
             border: 1px solid #ccc;
             padding: 20px;
             flex-direction: column;
-            background-color: rgba(255, 255, 255, 0.1); /* Added a semi-transparent background for the container */
-            backdrop-filter: blur(10px); /* Optional: Adds a blur effect to the background */
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
@@ -69,19 +68,23 @@
 
         .next-button {
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: grey;
             color: white;
             border: none;
             cursor: pointer;
             text-decoration: none;
+            pointer-events: none;
+            opacity: 0.5;
         }
 
-        .next-button:hover {
-            background-color: #0056b3;
+        .next-button.active {
+            background-color: #666;
+            pointer-events: auto;
+            opacity: 1;
         }
 
         h2, h3, h4 {
-            color: white; /* Added text color for better visibility */
+            color: black;
         }
     </style>
 </head>
@@ -131,7 +134,7 @@
         </div>
 
         <div class="next-button-container">
-            <a href="{% url 'step3' %}" class="next-button">next</a>
+            <a href="{% url 'step3' %}" class="next-button" id="nextButton">Next</a>
         </div>
     </div>
 
@@ -143,6 +146,7 @@
         const supportDetailsDiv = document.getElementById('supportDetails');
         const supportEmailInput = document.getElementById('supportEmail');
         const supportPhoneInput = document.getElementById('supportPhone');
+        const nextButton = document.getElementById('nextButton');
 
         const displayName = document.getElementById('displayStoreName');
         const displayTitle = document.getElementById('displayStoreTitle');
@@ -151,13 +155,10 @@
         const displayEmail = document.getElementById('displayEmail');
         const displayPhone = document.getElementById('displayPhone');
 
-        // Function to update the right panel dynamically
         function updateDisplay() {
-            // Update store name and title
             displayName.textContent = storeNameInput.value || "Books store";
             displayTitle.textContent = storeTitleInput.value || "Trial online store";
 
-            // Update logo
             if (logoInput.files && logoInput.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
@@ -168,7 +169,6 @@
                 displayLogo.src = "";
             }
 
-            // Update support details
             if (supportCheckbox.checked) {
                 displaySupport.style.display = 'block';
                 displayEmail.textContent = supportEmailInput.value || "praveenkumaradha@gmail.com";
@@ -176,9 +176,18 @@
             } else {
                 displaySupport.style.display = 'none';
             }
+
+            validateForm();
         }
 
-        // Add event listeners to update the display dynamically
+        function validateForm() {
+            if (storeNameInput.value.trim() !== "" && storeTitleInput.value.trim() !== "") {
+                nextButton.classList.add('active');
+            } else {
+                nextButton.classList.remove('active');
+            }
+        }
+
         storeNameInput.addEventListener('input', updateDisplay);
         storeTitleInput.addEventListener('input', updateDisplay);
         logoInput.addEventListener('change', updateDisplay);
@@ -189,7 +198,6 @@
         supportEmailInput.addEventListener('input', updateDisplay);
         supportPhoneInput.addEventListener('input', updateDisplay);
 
-        // Initialize the display with default values
         updateDisplay();
     </script>
 </body>
