@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Store</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{% static "images/store-background.jpg" %}'); /* Replace with your image path */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            color: white;
+            text-align: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white for the card */
+            color: black; /* Set text color to black for better contrast on the card */
+        }
+
+        .btn-primary {
+            background-color: #00bcd4;
+            border-color: #00bcd4;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #008ba7;
+            border-color: #008ba7;
+        }
+
+        h2, h5, p {
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        .card-title {
+            color: black;
+            text-shadow: none; /* remove text shadow from the card title */
+        }
+
+        .card-body p{
+            color: black;
+            text-shadow: none;
+        }
+
+        .form-label, .form-control{
+            color: black;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container text-center">
+        <h2 class="mt-5">Create Store</h2>
+        <div class="card mt-4 mx-auto" style="max-width: 400px;">
+            <div class="card-body">
+                <h5 class="card-title">OTP</h5>
+                <form method="post" action="{% url 'verify_otp' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="otp" class="form-label">Enter OTP</label>
+                        <input type="text" class="form-control" id="otp" name="otp" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Verify OTP</button>
+                </form>
+            </div>
+        </div>
+        <div class="mt-4">
+            <p><strong>Enter the RECEIVED OTP</strong> </p>
+            <p><strong>WELCOME</strong> </p>
+        </div>
+    </div>
+</body>
+</html>

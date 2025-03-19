@@ -1,0 +1,196 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Shopnix Store Setup</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            /* Background image styles added here */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{% static "images/store-setup-bg.jpg" %}'); /* Replace with your image path */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white; /* Added text color for better visibility */
+        }
+
+        .container {
+            display: flex;
+            width: 80%;
+            border: 1px solid #ccc;
+            padding: 20px;
+            flex-direction: column;
+            background-color: rgba(255, 255, 255, 0.1); /* Added a semi-transparent background for the container */
+            backdrop-filter: blur(10px); /* Optional: Adds a blur effect to the background */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .panels {
+            display: flex;
+            width: 100%;
+        }
+
+        .left-panel {
+            width: 50%;
+            padding-right: 20px;
+        }
+
+        .right-panel {
+            width: 50%;
+            padding-left: 20px;
+            border-left: 1px solid #ccc;
+        }
+
+        .left-panel label, .left-panel input {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .store-info {
+            text-align: center;
+        }
+
+        .store-info img {
+            max-width: 150px;
+            max-height: 150px;
+            margin: 10px 0;
+        }
+
+        .next-button-container {
+            text-align: right;
+            margin-top: 20px;
+        }
+
+        .next-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .next-button:hover {
+            background-color: #0056b3;
+        }
+
+        h2, h3, h4 {
+            color: white; /* Added text color for better visibility */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="panels">
+            <div class="left-panel">
+                <h2>Let's Customize Your Shopnix Store</h2>
+                <h3>Set Up the Store</h3>
+                <h4>Basic Details</h4>
+
+                <label for="storeName">Name of the Store:</label>
+                <input type="text" id="storeName" placeholder="Books store">
+
+                <label for="storeTitle">Store Title:</label>
+                <input type="text" id="storeTitle" placeholder="Trial online store">
+
+                <label for="storeLogo">Add Logo:</label>
+                <input type="file" id="storeLogo" accept="image/*">
+
+                <label for="storeFavicon">Add Favicon:</label>
+                <input type="file" id="storeFavicon" accept="image/*">
+
+                <label for="supportCheckbox">Add Support Details:</label>
+                <input type="checkbox" id="supportCheckbox">
+
+                <div id="supportDetails" style="display: none;">
+                    <label for="supportEmail">Email:</label>
+                    <input type="email" id="supportEmail" placeholder="praveenkumaradha@gmail.com">
+
+                    <label for="supportPhone">Phone:</label>
+                    <input type="tel" id="supportPhone" placeholder="9486209546">
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="store-info">
+                    <h3 id="displayStoreName"></h3>
+                    <p id="displayStoreTitle"></p>
+                    <img id="displayLogo" src="" alt="Store Logo">
+                    <div id="displaySupport" style="display: none;">
+                        <p id="displayEmail"></p>
+                        <p id="displayPhone"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-button-container">
+            <a href="{% url 'step3' %}" class="next-button">next</a>
+        </div>
+    </div>
+
+    <script>
+        const storeNameInput = document.getElementById('storeName');
+        const storeTitleInput = document.getElementById('storeTitle');
+        const logoInput = document.getElementById('storeLogo');
+        const supportCheckbox = document.getElementById('supportCheckbox');
+        const supportDetailsDiv = document.getElementById('supportDetails');
+        const supportEmailInput = document.getElementById('supportEmail');
+        const supportPhoneInput = document.getElementById('supportPhone');
+
+        const displayName = document.getElementById('displayStoreName');
+        const displayTitle = document.getElementById('displayStoreTitle');
+        const displayLogo = document.getElementById('displayLogo');
+        const displaySupport = document.getElementById('displaySupport');
+        const displayEmail = document.getElementById('displayEmail');
+        const displayPhone = document.getElementById('displayPhone');
+
+        // Function to update the right panel dynamically
+        function updateDisplay() {
+            // Update store name and title
+            displayName.textContent = storeNameInput.value || "Books store";
+            displayTitle.textContent = storeTitleInput.value || "Trial online store";
+
+            // Update logo
+            if (logoInput.files && logoInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    displayLogo.src = e.target.result;
+                }
+                reader.readAsDataURL(logoInput.files[0]);
+            } else {
+                displayLogo.src = "";
+            }
+
+            // Update support details
+            if (supportCheckbox.checked) {
+                displaySupport.style.display = 'block';
+                displayEmail.textContent = supportEmailInput.value || "praveenkumaradha@gmail.com";
+                displayPhone.textContent = supportPhoneInput.value || "9486209546";
+            } else {
+                displaySupport.style.display = 'none';
+            }
+        }
+
+        // Add event listeners to update the display dynamically
+        storeNameInput.addEventListener('input', updateDisplay);
+        storeTitleInput.addEventListener('input', updateDisplay);
+        logoInput.addEventListener('change', updateDisplay);
+        supportCheckbox.addEventListener('change', function() {
+            supportDetailsDiv.style.display = this.checked ? 'block' : 'none';
+            updateDisplay();
+        });
+        supportEmailInput.addEventListener('input', updateDisplay);
+        supportPhoneInput.addEventListener('input', updateDisplay);
+
+        // Initialize the display with default values
+        updateDisplay();
+    </script>
+</body>
+</html>
